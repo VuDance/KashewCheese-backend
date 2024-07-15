@@ -22,6 +22,13 @@ namespace Persistence.Context
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<RolePermission> RolePermissions { get; set; }
 
+        //category
+        public DbSet<Category> Category { get; set; }
+        //subcategory
+        public DbSet<SubCategory> SubCategories { get; set; }
+        //product
+        public DbSet<Product> Products { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UserRole>()
@@ -49,6 +56,24 @@ namespace Persistence.Context
                 .HasOne(rp => rp.Permission)
                 .WithMany(p => p.RolePermissions)
                 .HasForeignKey(rp => rp.PermissionId);
+
+            //category
+            modelBuilder.Entity<Category>()
+                .HasIndex(c => c.Slug).IsUnique();
+            //subcategory
+            modelBuilder.Entity<SubCategory>()
+                .HasIndex(sb => sb.Slug).IsUnique();
+            modelBuilder.Entity<SubCategory>()
+                .HasOne(sb => sb.Category)
+                .WithMany(sb => sb.SubCategories)
+                .HasForeignKey(sb => sb.CategoryId);
+            //product
+            modelBuilder.Entity<Product>()
+                .HasIndex(p => p.Slug).IsUnique();
+            modelBuilder.Entity<Product>()
+                .HasOne(p=>p.SubCategory)
+                .WithMany(p=>p.Products)
+                .HasForeignKey(p=>p.SubCategoryId);
         }
         public async Task<int> SaveChangesAsync()
         {

@@ -1,6 +1,8 @@
 ﻿using Application.Interfaces;
+using AutoMapper;
 using KashewCheese.API.Attributes;
 using KashewCheese.Application.Common.Interfaces.Persistence;
+using KashewCheese.Application.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Newtonsoft.Json;
@@ -12,10 +14,14 @@ namespace WebAPI
     public class PermissionMiddleware
     {
         private readonly RequestDelegate _next;
+        private readonly ICacheService _cacheService;
+        private readonly IMapper _mapper;
 
-        public PermissionMiddleware(RequestDelegate next)
+        public PermissionMiddleware(RequestDelegate next, ICacheService cacheService,IMapper mapper)
         {
             _next = next;
+            _cacheService = cacheService;
+            _mapper = mapper;
         }
 
         public async Task InvokeAsync(HttpContext context, IRoleRepository roleRepository)
@@ -40,30 +46,36 @@ namespace WebAPI
 
 
             var cacheService = context.RequestServices.GetRequiredService<ICacheService>();
-            var cacheKey = GenerateCacheKey(context.Request,user.Claims.Where(c => c.Type == "Email").Select(c => c.Value).First().ToString());
-            var cacheResponse = await cacheService.GetCacheAsync(cacheKey);
+            var request = _mapper.Map<RequestInfoDto>(context.Request);
+            var cacheKey =_cacheService.GenerateCacheKey(request,user.Claims.Where(c => c.Type == "Email").Select(c => c.Value).First().ToString());
             var roles = context.User.Claims.FirstOrDefault(c => c.Type == "Roles")?.Value;
+            var cacheResponse = await cacheService.GetCacheAsync(cacheKey);
 
             List<string> permissions = new List<string>();
 
 
             if (!string.IsNullOrEmpty(cacheResponse))
             {
-                permissions = JsonConvert.DeserializeObject<List<string>>(cacheResponse);
+                string cacheResponseReplaced = cacheResponse.Replace("\\\"", "\"").Trim('"');
+                permissions = JsonConvert.DeserializeObject<List<string>>(cacheResponseReplaced);
             }
             //ko thì gọi hàm check role và sau đó set role vào redis
             else
             {
                 //get service của role
                 var userRoles = await roleRepository.GetRoleByEmail(user.Claims.Where(c => c.Type == "Email").First().Value);
-                string jsonConvert = JsonConvert.SerializeObject(userRoles);
-                await cacheService.SetCacheAsync(cacheKey,jsonConvert,TimeSpan.FromHours(1));
+                var settings = new JsonSerializerSettings
+                {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                };
                 List<string> stringRoles= new List<string>();
                 foreach (var role in userRoles)
                 {
                     stringRoles.Add(role.Name);
                 }
                 permissions = stringRoles;
+                string jsonConvert = JsonConvert.SerializeObject(permissions,settings);
+                await cacheService.SetCacheAsync(cacheKey,jsonConvert,TimeSpan.FromHours(1));
             }
             // Kiểm tra quyền
 
@@ -96,23 +108,7 @@ namespace WebAPI
             // Kiểm tra xem endpoint có chứa attribute AuthorizePermissionAttribute hay không
             return endpoint.Metadata.Any(meta => meta.GetType() == typeof(AuthorizePermissionAttribute));
         }
-        private static string GenerateCacheKey(HttpRequest request,string? claims)
-        {
-            var keyBuilder = new StringBuilder();
-            keyBuilder.Append($"{request.Path}");
-            if(claims != null )
-            {
-                keyBuilder.Append($"|{claims}");
-            }
-            foreach(var (key, value) in request.Query.OrderBy(x=>x.Key))
-            {
-                keyBuilder.Append($"|{key}---{value}");
-
-            }
-            
-            return keyBuilder.ToString();
-
-        }
+        
 
     }
 

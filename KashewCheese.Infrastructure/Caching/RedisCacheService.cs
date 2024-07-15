@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces;
+using KashewCheese.Application.DTO;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -48,6 +49,22 @@ namespace Persistence.Redis
         {
             var db = _redis.GetDatabase();
             await db.KeyDeleteAsync(key);
+        }
+
+        public string GenerateCacheKey(RequestInfoDto requestInfo, string? claims)
+        {
+            var keyBuilder = new StringBuilder();
+            keyBuilder.Append($"{requestInfo.Path}");
+            if (claims != null)
+            {
+                keyBuilder.Append($"|{claims}");
+            }
+            foreach (var (key, value) in requestInfo.QueryParameters.OrderBy(x => x.Key))
+            {
+                keyBuilder.Append($"|{key}---{value}");
+            }
+
+            return keyBuilder.ToString();
         }
     }
 

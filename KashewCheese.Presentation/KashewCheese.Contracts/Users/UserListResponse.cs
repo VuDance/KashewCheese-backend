@@ -6,8 +6,12 @@ using System.Threading.Tasks;
 
 namespace KashewCheese.Contracts.Users
 {
-    public class UserListResponse
+    public record UserListResponse
     {
         public List<UserResponse> UserResponses { get; set; }
-    }
+        public UserListResponse()
+        {
+            UserResponses = new List<UserResponse>();
+        }
+    };
 }

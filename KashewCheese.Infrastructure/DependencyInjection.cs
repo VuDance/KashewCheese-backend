@@ -39,6 +39,7 @@ namespace KashewCheese.Infrastructure
         {
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
             /*services.AddScoped<IAdminstratorRepository, AdminstratorRepository>();
             services.AddScoped<IAccountsRepository, AccountsRepository>();
             services.AddScoped<ICustomerRepository, CustomersRepository>();
