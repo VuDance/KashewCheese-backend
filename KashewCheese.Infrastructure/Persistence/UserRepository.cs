@@ -1,4 +1,5 @@
-﻿using KashewCheese.Application.Common.Interfaces.Persistence;
+﻿using Application.Interfaces;
+using KashewCheese.Application.Common.Interfaces.Persistence;
 using KashewCheese.Application.DTO;
 using KashewCheese.Domain.Entities;
 using Microsoft.EntityFrameworkCore;

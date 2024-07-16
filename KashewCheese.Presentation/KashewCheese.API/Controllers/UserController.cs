@@ -8,6 +8,7 @@ using KashewCheese.Application.Services.Users.Queries.GetUserList;
 using KashewCheese.Contracts.Authentication;
 using KashewCheese.Contracts.Users;
 using KashewCheese.API.Common;
+using KashewCheese.Application.DTO;
 
 namespace KashewCheese.API.Controllers
 {
@@ -23,9 +24,10 @@ namespace KashewCheese.API.Controllers
         [HttpGet]
         [Authorize]
         [AuthorizePermission(UserPermission.ViewUser)]
-        public async Task<IActionResult> GetAllUser()
+        public async Task<IActionResult> GetAllUser([FromQuery] int page = 1, [FromQuery] int pageSize=10)
         {
-            var userList = await _mediator.Send(new GetUserListQuery());
+            
+            var userList = await _mediator.Send(new GetUserListQuery(page,pageSize));
             var response = _mapper.Map<UserListResponse>(userList);
             return Ok(response);
 

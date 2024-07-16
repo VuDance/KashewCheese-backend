@@ -2,6 +2,7 @@
 using AutoMapper;
 using KashewCheese.API.Attributes;
 using KashewCheese.Application.Common.Interfaces.Persistence;
+using KashewCheese.Application.Constants;
 using KashewCheese.Application.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -45,11 +46,10 @@ namespace WebAPI
             }
 
 
-            var cacheService = context.RequestServices.GetRequiredService<ICacheService>();
             var request = _mapper.Map<RequestInfoDto>(context.Request);
-            var cacheKey =_cacheService.GenerateCacheKey(request,user.Claims.Where(c => c.Type == "Email").Select(c => c.Value).First().ToString());
+            var cacheKey =_cacheService.GenerateCacheKey(KeyPrefix.Permission,request.QueryParameters,user.Claims.Where(c => c.Type == "Email").Select(c => c.Value).First().ToString());
             var roles = context.User.Claims.FirstOrDefault(c => c.Type == "Roles")?.Value;
-            var cacheResponse = await cacheService.GetCacheAsync(cacheKey);
+            var cacheResponse = await _cacheService.GetCacheAsync(cacheKey);
 
             List<string> permissions = new List<string>();
 
@@ -63,7 +63,7 @@ namespace WebAPI
             else
             {
                 //get service của role
-                var userRoles = await roleRepository.GetRoleByEmail(user.Claims.Where(c => c.Type == "Email").First().Value);
+                var userRoles = await roleRepository.GetPermissionByEmail(user.Claims.Where(c => c.Type == "Email").First().Value);
                 var settings = new JsonSerializerSettings
                 {
                     ReferenceLoopHandling = ReferenceLoopHandling.Ignore
@@ -75,7 +75,7 @@ namespace WebAPI
                 }
                 permissions = stringRoles;
                 string jsonConvert = JsonConvert.SerializeObject(permissions,settings);
-                await cacheService.SetCacheAsync(cacheKey,jsonConvert,TimeSpan.FromHours(1));
+                await _cacheService.SetCacheAsync(cacheKey,jsonConvert,TimeSpan.FromHours(1));
             }
             // Kiểm tra quyền
 

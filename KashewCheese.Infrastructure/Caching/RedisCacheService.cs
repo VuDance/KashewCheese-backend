@@ -51,17 +51,21 @@ namespace Persistence.Redis
             await db.KeyDeleteAsync(key);
         }
 
-        public string GenerateCacheKey(RequestInfoDto requestInfo, string? claims)
+        public string GenerateCacheKey(string prefix,IDictionary<string,string>? queryParamaters, string? claims)
         {
             var keyBuilder = new StringBuilder();
-            keyBuilder.Append($"{requestInfo.Path}");
+            keyBuilder.Append($"{prefix}:");
             if (claims != null)
             {
                 keyBuilder.Append($"|{claims}");
             }
-            foreach (var (key, value) in requestInfo.QueryParameters.OrderBy(x => x.Key))
+
+            if (queryParamaters!=null || queryParamaters.Count>0)
             {
-                keyBuilder.Append($"|{key}---{value}");
+                foreach (var (key, value) in queryParamaters.OrderBy(x => x.Key))
+                {
+                    keyBuilder.Append($"|{key}---{value}");
+                }
             }
 
             return keyBuilder.ToString();

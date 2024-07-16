@@ -38,17 +38,21 @@ namespace KashewCheese.Infrastructure.Persistence
             return role;
         }
 
-        public async Task<List<Role>> GetRoleByEmail(string email)
+        public async Task<List<Permission>> GetPermissionByEmail(string email)
         {
             var userRoles = await _context.Users
                 .Where(u => u.Email == email)
                 .Include(u => u.UserRoles)
-                    .ThenInclude(ur => ur.Role).ToListAsync();
+                    .ThenInclude(ur => ur.Role).ThenInclude(r=>r.RolePermissions).ThenInclude(rp=>rp.Permission).ToListAsync();
 
-            List<Role> roles = new List<Role>();
-            roles=userRoles.SelectMany(u => u.UserRoles.Select(ur => ur.Role)).ToList();
+            List<Permission> permissions = userRoles
+            .SelectMany(u => u.UserRoles)
+            .SelectMany(ur => ur.Role.RolePermissions)
+            .Select(rp => rp.Permission)
+            .Distinct()
+            .ToList();
 
-            return roles;
+            return permissions;
 
         }
     }

@@ -8,7 +8,7 @@ namespace Application.Interfaces
         Task<string> GetCacheAsync(string key);
         Task RemoveCacheAsync(string key);
 
-        string GenerateCacheKey(RequestInfoDto request, string? claims);
+        string GenerateCacheKey(string prefix,IDictionary<string,string>? queryParameters, string? claims);
     }
 
 }
