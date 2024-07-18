@@ -13,6 +13,8 @@ namespace KashewCheese.API.Mapping
 
             CreateMap<UserResult, UserListResponse>()
                 .ForMember(dest => dest.UserResponses, opt => opt.MapFrom(src => src.Users));
+            CreateMap<List<User>, UserResult>()
+                .ForMember(dest => dest.Users, opt => opt.MapFrom(src => src));
         }
     }
 }

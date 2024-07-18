@@ -60,7 +60,7 @@ namespace Persistence.Redis
                 keyBuilder.Append($"|{claims}");
             }
 
-            if (queryParamaters!=null || queryParamaters.Count>0)
+            if (queryParamaters!=null && queryParamaters.Count>0)
             {
                 foreach (var (key, value) in queryParamaters.OrderBy(x => x.Key))
                 {
@@ -69,6 +69,10 @@ namespace Persistence.Redis
             }
 
             return keyBuilder.ToString();
+        }
+        public string ConvertData(string data)
+        {
+            return data.Replace("\\\"", "\"").Trim('"');
         }
     }
 

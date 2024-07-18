@@ -1,5 +1,6 @@
 
 using KashewCheese.API;
+using KashewCheese.API.Middlewares;
 using KashewCheese.Application;
 using KashewCheese.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -63,5 +64,9 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<PermissionMiddleware>();
+app.UseWhen(context => context.Request.Path.StartsWithSegments("/api/User/GetUser"), appBuilder =>
+{
+    appBuilder.UseMiddleware<UserMiddleware>();
+});
 app.MapControllers();
 app.Run();

@@ -36,7 +36,7 @@ namespace KashewCheese.Infrastructure.Authentication
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
 
         };
-            var rolesJson = JsonConvert.SerializeObject(user.UserRoles);
+            var rolesJson = JsonConvert.SerializeObject(user.UserRoles[0].RoleName);
             claims.Add(new Claim("Roles", rolesJson));
 
             var securityToken = new JwtSecurityToken(

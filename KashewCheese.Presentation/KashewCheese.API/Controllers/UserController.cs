@@ -23,12 +23,12 @@ namespace KashewCheese.API.Controllers
         }
         [HttpGet]
         [Authorize]
+        [Route("GetUser")]
         [AuthorizePermission(UserPermission.ViewUser)]
         public async Task<IActionResult> GetAllUser([FromQuery] int page = 1, [FromQuery] int pageSize=10)
         {
-            
-            var userList = await _mediator.Send(new GetUserListQuery(page,pageSize));
-            var response = _mapper.Map<UserListResponse>(userList);
+            var users = await _mediator.Send(new GetUserListQuery(page,pageSize));
+            var response = _mapper.Map<UserListResponse>(users);
             return Ok(response);
 
         }

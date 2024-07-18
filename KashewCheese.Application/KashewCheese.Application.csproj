@@ -15,9 +15,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\KashewCheese.Domain\KashewCheese.Domain.csproj" />
+    <ProjectReference Include="..\KashewCheese.Presentation\KashewCheese.Contracts\KashewCheese.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Services\Cart\Commands\" />
     <Folder Include="Services\Users\Commands\" />
   </ItemGroup>
 

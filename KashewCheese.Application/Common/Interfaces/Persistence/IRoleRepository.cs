@@ -13,7 +13,7 @@ namespace KashewCheese.Application.Common.Interfaces.Persistence
         Task AddUserRole(List<RoleDto> roles, int userId);
         Task<Role> GetRole(string name);
 
-        Task<List<Permission>> GetPermissionByEmail(string email);
+        Task<List<Role>> GetRoleByEmail(string email);
 
     }
 }

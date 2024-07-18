@@ -9,6 +9,7 @@ namespace Application.Interfaces
         Task RemoveCacheAsync(string key);
 
         string GenerateCacheKey(string prefix,IDictionary<string,string>? queryParameters, string? claims);
+        string ConvertData(string data);
     }
 
 }
