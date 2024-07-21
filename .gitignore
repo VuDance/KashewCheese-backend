@@ -179,6 +179,12 @@ DocProject/Help/html
 # Click-Once directory
 publish/
 
+#appsetting
+KashewCheese.Presentation/KashewCheese.API/appsettings.json
+KashewCheese.Presentation/KashewCheese.API/appsettings.Development.json
+**/appsettings.json
+
+
 # Publish Web Output
 *.[Pp]ublish.xml
 *.azurePubxml
