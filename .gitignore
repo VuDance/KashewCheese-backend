@@ -368,3 +368,4 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /KashewCheese.Presentation/KashewCheese.API/appsettings.json
+/KashewCheese.Presentation/KashewCheese.API/appsettings.json
