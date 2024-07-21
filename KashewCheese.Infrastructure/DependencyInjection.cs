@@ -1,8 +1,12 @@
-﻿using Application.Interfaces;
+﻿using Amazon.Runtime;
+using Amazon.S3;
+using Application.Interfaces;
 using KashewCheese.Application.Common.Interfaces.Authentication;
+using KashewCheese.Application.Common.Interfaces.File;
 using KashewCheese.Application.Common.Interfaces.Persistence;
 using KashewCheese.Application.Common.Services;
 using KashewCheese.Infrastructure.Authentication;
+using KashewCheese.Infrastructure.File;
 using KashewCheese.Infrastructure.Persistence;
 using KashewCheese.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -27,7 +31,9 @@ namespace KashewCheese.Infrastructure
                 .AddAuth(configuration)
                 .AddContext(configuration)
                 .AddPersistence()
-                .AddCaching(configuration);
+                .AddCaching(configuration)
+                .AddS3(configuration);
+              
             services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
 
             return services;
@@ -40,6 +46,7 @@ namespace KashewCheese.Infrastructure
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IFileStorageService, S3FileStorageService>();
             /*services.AddScoped<IAdminstratorRepository, AdminstratorRepository>();
             services.AddScoped<IAccountsRepository, AccountsRepository>();
             services.AddScoped<ICustomerRepository, CustomersRepository>();
@@ -64,6 +71,18 @@ namespace KashewCheese.Infrastructure
                     configuration.GetConnectionString("DefaultConnection"),
                     b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
 
+            return services;
+        }
+
+        public static IServiceCollection AddS3(this IServiceCollection services,ConfigurationManager configuration)
+        {
+            var awsOptions = configuration.GetAWSOptions();
+            awsOptions.Credentials = new BasicAWSCredentials(
+                configuration["AWS:AccessKey"],
+                configuration["AWS:SecretKey"]
+            );
+            services.AddDefaultAWSOptions(awsOptions);
+            services.AddAWSService<IAmazonS3>();
             return services;
         }
 

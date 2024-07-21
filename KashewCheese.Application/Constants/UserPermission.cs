@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace KashewCheese.Application.Constants
 {
-    public class UserPermission
+    public static class UserPermission
     {
         public const string CreateUser = "CreateUser";
         public const string EditUser = "EditUser";
