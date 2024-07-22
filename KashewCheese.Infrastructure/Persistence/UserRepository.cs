@@ -36,7 +36,7 @@ namespace KashewCheese.Infrastructure.Persistence
             
             var userData= await _context.Users.AddAsync(userCreated);
             await _context.SaveChangesAsync();
-            _roleRepository.AddUserRole(user.UserRoles,userData.Entity.Id);
+            await _roleRepository.AddUserRole(user.UserRoles,userData.Entity.Id);
 
             await _context.SaveChangesAsync();
         }
@@ -49,7 +49,7 @@ namespace KashewCheese.Infrastructure.Persistence
 
         public async Task<User?> GetUserByEmail(string email)
         {
-            User user = await _context.Users.Include(u=>u.UserRoles).ThenInclude(u=>u.Role).FirstOrDefaultAsync(u => u.Email == email);
+            User user = await _context.Users.Include(u => u.UserRoles).ThenInclude(u => u.Role).FirstOrDefaultAsync(u => u.Email == email);
             return user;
         }
 

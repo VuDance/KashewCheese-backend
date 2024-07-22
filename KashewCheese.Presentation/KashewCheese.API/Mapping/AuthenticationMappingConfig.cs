@@ -4,7 +4,6 @@ using KashewCheese.Application.Services.Authentication.Commands.Register;
 using KashewCheese.Application.Services.Authentication.Common;
 using KashewCheese.Application.Services.Authentication.Queries.Login;
 using KashewCheese.Contracts.Authentication;
-using Mapster;
 
 namespace KashewCheese.API.Mapping
 {

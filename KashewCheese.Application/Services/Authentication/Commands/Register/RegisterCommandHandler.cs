@@ -39,7 +39,7 @@ namespace KashewCheese.Application.Services.Authentication.Commands.Register
                 UserRoles = command.Roles
             };
             
-            _userRepository.Add(user);
+            await _userRepository.Add(user);
 
             var token = _jwtTokenGenerator.GenerateToken(user);
 

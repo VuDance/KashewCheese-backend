@@ -5,7 +5,6 @@ using KashewCheese.Application;
 using KashewCheese.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.Filters;
 using WebAPI;
 
 var builder = WebApplication.CreateBuilder(args);
