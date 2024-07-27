@@ -14,8 +14,9 @@ namespace KashewCheese.Application.Services.Categories.Commands.Create
     string DescriptionVN,
     string DescriptionEN,
     string Slug,
-    bool IsDelete,
-    bool IsDraft,
-    bool IsPublished
-    ):IRequest<CreateCategoryResult>;
+    bool? IsDelete,
+    bool? IsDraft,
+    bool? IsPublished,
+     int? ParentCategoryId
+    ) : IRequest<CreateCategoryResult>;
 }

@@ -14,16 +14,15 @@ namespace KashewCheese.Domain.Entities
         [Key]
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
-        public string CategoryId { get; set; }
         public string Slug { get; set; }
+        public string Description { get; set; }
         public string ProductThumb { get; set; }
         public string ProductAttributes { get; set; }
         public bool IsDelete { get; set; } = false;
         public bool IsDraft { get; set; } = false;
         public bool IsPublished { get; set; } = true;
-        public int SubCategoryId {  get; set; }
-        public SubCategory SubCategory { get; set; }
+        public int CategoryId { get; set; }
+        public Category Category { get; set; }
 
     }
 }

@@ -51,14 +51,16 @@ namespace KashewCheese.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("ParentCategoryId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Slug")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Slug")
-                        .IsUnique();
+                    b.HasIndex("ParentCategoryId");
 
                     b.ToTable("Categories");
                 });
@@ -86,9 +88,8 @@ namespace KashewCheese.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("CategoryId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -119,15 +120,12 @@ namespace KashewCheese.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("SubCategoryId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("Slug")
                         .IsUnique();
-
-                    b.HasIndex("SubCategoryId");
 
                     b.ToTable("Products");
                 });
@@ -162,52 +160,6 @@ namespace KashewCheese.Infrastructure.Migrations
                     b.HasIndex("PermissionId");
 
                     b.ToTable("RolePermissions");
-                });
-
-            modelBuilder.Entity("KashewCheese.Domain.Entities.SubCategory", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("DescriptionEN")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DescriptionVN")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDelete")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDraft")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsPublished")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Slug")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
-
-                    b.HasIndex("Slug")
-                        .IsUnique();
-
-                    b.ToTable("SubCategories");
                 });
 
             modelBuilder.Entity("KashewCheese.Domain.Entities.User", b =>
@@ -252,15 +204,25 @@ namespace KashewCheese.Infrastructure.Migrations
                     b.ToTable("UserRoles");
                 });
 
+            modelBuilder.Entity("KashewCheese.Domain.Entities.Category", b =>
+                {
+                    b.HasOne("KashewCheese.Domain.Entities.Category", "ParentCategory")
+                        .WithMany("SubCategories")
+                        .HasForeignKey("ParentCategoryId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("ParentCategory");
+                });
+
             modelBuilder.Entity("KashewCheese.Domain.Entities.Product", b =>
                 {
-                    b.HasOne("KashewCheese.Domain.Entities.SubCategory", "SubCategory")
+                    b.HasOne("KashewCheese.Domain.Entities.Category", "Category")
                         .WithMany("Products")
-                        .HasForeignKey("SubCategoryId")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("SubCategory");
+                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("KashewCheese.Domain.Entities.RolePermission", b =>
@@ -280,17 +242,6 @@ namespace KashewCheese.Infrastructure.Migrations
                     b.Navigation("Permission");
 
                     b.Navigation("Role");
-                });
-
-            modelBuilder.Entity("KashewCheese.Domain.Entities.SubCategory", b =>
-                {
-                    b.HasOne("KashewCheese.Domain.Entities.Category", "Category")
-                        .WithMany("SubCategories")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("KashewCheese.Domain.Entities.UserRole", b =>
@@ -314,6 +265,8 @@ namespace KashewCheese.Infrastructure.Migrations
 
             modelBuilder.Entity("KashewCheese.Domain.Entities.Category", b =>
                 {
+                    b.Navigation("Products");
+
                     b.Navigation("SubCategories");
                 });
 
@@ -327,11 +280,6 @@ namespace KashewCheese.Infrastructure.Migrations
                     b.Navigation("RolePermissions");
 
                     b.Navigation("UserRoles");
-                });
-
-            modelBuilder.Entity("KashewCheese.Domain.Entities.SubCategory", b =>
-                {
-                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("KashewCheese.Domain.Entities.User", b =>

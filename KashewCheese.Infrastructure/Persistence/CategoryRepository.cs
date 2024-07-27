@@ -1,6 +1,7 @@
 ﻿using KashewCheese.Application.Common.Interfaces.Persistence;
 using KashewCheese.Application.DTO;
 using KashewCheese.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using Persistence.Context;
 using System;
 using System.Collections.Generic;
@@ -30,11 +31,17 @@ namespace KashewCheese.Infrastructure.Persistence
                 IsDelete=category.IsDelete,
                 IsDraft=category.IsDraft,
                 IsPublished=category.IsPublished,
+                ParentCategoryId=category.ParentCategoryId,
             };
 
             await _context.Category.AddAsync(ct);
             await _context.SaveChangesAsync();
 
+        }
+        public async Task<List<Category>> GetCategories()
+        {
+            List<Category> categories = await _context.Category.Include(c=>c.Products).Include(c=>c.SubCategories).ToListAsync();
+            return categories;
         }
     }
 }

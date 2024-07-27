@@ -16,10 +16,12 @@ namespace KashewCheese.Domain.Entities
         public string DescriptionVN { get; set; }
         public string DescriptionEN { get; set; }
         public string Slug { get; set; }
-
+        public int? ParentCategoryId {  get; set; }
+        public Category? ParentCategory { get; set; }
         public bool IsDelete { get; set; } = false;
         public bool IsDraft { get; set; } = false;
         public bool IsPublished { get; set; } = true;
-        public ICollection<SubCategory> SubCategories { get; set; }
+        public ICollection<Category> SubCategories { get; set; }
+        public ICollection<Product> Products { get; set; }
     }
 }

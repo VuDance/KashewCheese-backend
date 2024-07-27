@@ -16,5 +16,6 @@ namespace KashewCheese.Application.DTO
         public bool IsDelete { get; set; } = false;
         public bool IsDraft { get; set; } = false;
         public bool IsPublished { get; set; } = true;
+        public int? ParentCategoryId {  get; set; }
     }
 }

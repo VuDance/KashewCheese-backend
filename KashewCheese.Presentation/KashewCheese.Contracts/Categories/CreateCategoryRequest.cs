@@ -11,8 +11,9 @@ namespace KashewCheese.Contracts.Categories
      string DescriptionVN,
      string DescriptionEN,
      string Slug,
-     bool IsDelete, 
-     bool IsDraft ,
-     bool IsPublished
+     bool? IsDelete, 
+     bool? IsDraft ,
+     bool? IsPublished,
+     int? ParentCategoryId
     );
 }

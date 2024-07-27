@@ -2,10 +2,12 @@
 using Amazon.S3;
 using Application.Interfaces;
 using KashewCheese.Application.Common.Interfaces.Authentication;
+using KashewCheese.Application.Common.Interfaces.ElasticSearch;
 using KashewCheese.Application.Common.Interfaces.File;
 using KashewCheese.Application.Common.Interfaces.Persistence;
 using KashewCheese.Application.Common.Services;
 using KashewCheese.Infrastructure.Authentication;
+using KashewCheese.Infrastructure.ElasticSearch;
 using KashewCheese.Infrastructure.File;
 using KashewCheese.Infrastructure.Persistence;
 using KashewCheese.Infrastructure.Services;
@@ -15,6 +17,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Nest;
 using Persistence.Context;
 using Persistence.Redis;
 using StackExchange.Redis;
@@ -32,7 +35,8 @@ namespace KashewCheese.Infrastructure
                 .AddContext(configuration)
                 .AddPersistence()
                 .AddCaching(configuration)
-                .AddS3(configuration);
+                .AddS3(configuration)
+                .AddElasticsearch(configuration);
               
             services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
 
@@ -60,6 +64,21 @@ namespace KashewCheese.Infrastructure
             services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(configuration["RedisConfig:ConnectionStrings"]));
             services.AddStackExchangeRedisCache(opt => opt.Configuration = configuration["RedisConfig:ConnectionStrings"]);
             services.AddSingleton<ICacheService, RedisCacheService>();
+            return services;
+        }
+        public static IServiceCollection AddElasticsearch(this IServiceCollection services, ConfigurationManager configuration)
+        {
+            var url = configuration["ElasticsearchSettings:Uri"];
+            var defaultIndex = configuration["ElasticsearchSettings:DefaultIndex"];
+
+            var settings = new ConnectionSettings(new Uri(url))
+                .DefaultIndex(defaultIndex);
+
+            var client = new ElasticClient(settings);
+
+            services.AddSingleton<IElasticClient>(client);
+            services.AddTransient(typeof(IElasticSearchService<>), typeof(ElasticSearchService<>));
+
             return services;
         }
 

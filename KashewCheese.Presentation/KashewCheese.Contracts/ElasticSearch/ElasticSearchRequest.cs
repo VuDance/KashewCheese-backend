@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KashewCheese.Contracts.Categories
+namespace KashewCheese.Contracts.ElasticSearch
 {
-    public record CategoryResponse(string message);
+    public record ElasticSearchRequest(string Name);
 }

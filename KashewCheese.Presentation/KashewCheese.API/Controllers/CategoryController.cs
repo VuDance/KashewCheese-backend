@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using KashewCheese.API.Common;
 using KashewCheese.Application.Services.Categories.Commands.Create;
+using KashewCheese.Application.Services.Categories.Queries.GetCategories;
+using KashewCheese.Application.Services.Users.Queries.GetUserList;
 using KashewCheese.Contracts.Categories;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -24,7 +26,15 @@ namespace KashewCheese.API.Controllers
         {
             var command=_mapper.Map<CreateCommand>(createCategoryRequest);
             var result= await _mediator.Send(command);
-            var response=_mapper.Map<CategoryResponse>(result);
+            var response=_mapper.Map<CreateCategoryResponse>(result);
+            return Ok(response);
+        }
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetCategories([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        {
+            var categories = await _mediator.Send(new GetCategoriesQuery(page, pageSize));
+            var response = _mapper.Map<GetCategoriesResponse>(categories);
             return Ok(response);
         }
     }

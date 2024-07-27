@@ -24,8 +24,6 @@ namespace Persistence.Context
 
         //category
         public DbSet<Category> Category { get; set; }
-        //subcategory
-        public DbSet<SubCategory> SubCategories { get; set; }
         //product
         public DbSet<Product> Products { get; set; }
 
@@ -59,21 +57,18 @@ namespace Persistence.Context
 
             //category
             modelBuilder.Entity<Category>()
-                .HasIndex(c => c.Slug).IsUnique();
-            //subcategory
-            modelBuilder.Entity<SubCategory>()
-                .HasIndex(sb => sb.Slug).IsUnique();
-            modelBuilder.Entity<SubCategory>()
-                .HasOne(sb => sb.Category)
-                .WithMany(sb => sb.SubCategories)
-                .HasForeignKey(sb => sb.CategoryId);
+                .HasMany(c => c.SubCategories)
+                .WithOne(c => c.ParentCategory)
+                .HasForeignKey(c => c.ParentCategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             //product
             modelBuilder.Entity<Product>()
                 .HasIndex(p => p.Slug).IsUnique();
             modelBuilder.Entity<Product>()
-                .HasOne(p=>p.SubCategory)
+                .HasOne(p=>p.Category)
                 .WithMany(p=>p.Products)
-                .HasForeignKey(p=>p.SubCategoryId);
+                .HasForeignKey(p=>p.CategoryId);
         }
         public async Task<int> SaveChangesAsync()
         {

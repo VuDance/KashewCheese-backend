@@ -1,15 +1,42 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace KashewCheese.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class init1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Categories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DescriptionVN = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DescriptionEN = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Slug = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ParentCategoryId = table.Column<int>(type: "int", nullable: true),
+                    IsDelete = table.Column<bool>(type: "bit", nullable: false),
+                    IsDraft = table.Column<bool>(type: "bit", nullable: false),
+                    IsPublished = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Categories", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Categories_Categories_ParentCategoryId",
+                        column: x => x.ParentCategoryId,
+                        principalTable: "Categories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Permissions",
                 columns: table => new
@@ -50,6 +77,32 @@ namespace KashewCheese.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Products",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Slug = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProductThumb = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProductAttributes = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsDelete = table.Column<bool>(type: "bit", nullable: false),
+                    IsDraft = table.Column<bool>(type: "bit", nullable: false),
+                    IsPublished = table.Column<bool>(type: "bit", nullable: false),
+                    CategoryId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Products", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Products_Categories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Categories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -101,6 +154,22 @@ namespace KashewCheese.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Categories_ParentCategoryId",
+                table: "Categories",
+                column: "ParentCategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Products_CategoryId",
+                table: "Products",
+                column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Products_Slug",
+                table: "Products",
+                column: "Slug",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_RolePermissions_PermissionId",
                 table: "RolePermissions",
                 column: "PermissionId");
@@ -115,10 +184,16 @@ namespace KashewCheese.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Products");
+
+            migrationBuilder.DropTable(
                 name: "RolePermissions");
 
             migrationBuilder.DropTable(
                 name: "UserRoles");
+
+            migrationBuilder.DropTable(
+                name: "Categories");
 
             migrationBuilder.DropTable(
                 name: "Permissions");
