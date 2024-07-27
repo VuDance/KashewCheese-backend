@@ -17,12 +17,14 @@ namespace KashewCheese.Domain.Entities
         public string Slug { get; set; }
         public string Description { get; set; }
         public string ProductThumb { get; set; }
-        public string ProductAttributes { get; set; }
+        public string? ProductAttributes { get; set; }
+        public string ProductVariants {  get; set; }
         public bool IsDelete { get; set; } = false;
         public bool IsDraft { get; set; } = false;
         public bool IsPublished { get; set; } = true;
         public int CategoryId { get; set; }
         public Category Category { get; set; }
+        public ICollection<Sku> Skus { get; set; }
 
     }
 }

@@ -26,7 +26,7 @@ namespace Persistence.Context
         public DbSet<Category> Category { get; set; }
         //product
         public DbSet<Product> Products { get; set; }
-
+        public DbSet<Sku> Sku { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UserRole>()
@@ -61,6 +61,11 @@ namespace Persistence.Context
                 .WithOne(c => c.ParentCategory)
                 .HasForeignKey(c => c.ParentCategoryId)
                 .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Category>()
+                .HasMany(c => c.Products)
+                .WithOne(p => p.Category)
+                .HasForeignKey(p => p.CategoryId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             //product
             modelBuilder.Entity<Product>()
@@ -69,6 +74,12 @@ namespace Persistence.Context
                 .HasOne(p=>p.Category)
                 .WithMany(p=>p.Products)
                 .HasForeignKey(p=>p.CategoryId);
+            //sku
+            modelBuilder.Entity<Sku>()
+                .HasOne(s => s.Product)
+                .WithMany(s => s.Skus)
+                .HasForeignKey(s => s.ProductId);
+
         }
         public async Task<int> SaveChangesAsync()
         {

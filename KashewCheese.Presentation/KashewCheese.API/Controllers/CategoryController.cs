@@ -2,7 +2,6 @@
 using KashewCheese.API.Common;
 using KashewCheese.Application.Services.Categories.Commands.Create;
 using KashewCheese.Application.Services.Categories.Queries.GetCategories;
-using KashewCheese.Application.Services.Users.Queries.GetUserList;
 using KashewCheese.Contracts.Categories;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;

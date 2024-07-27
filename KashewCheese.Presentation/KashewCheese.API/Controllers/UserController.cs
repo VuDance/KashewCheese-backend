@@ -5,10 +5,8 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using KashewCheese.Application.Services.Users.Queries.GetUserList;
-using KashewCheese.Contracts.Authentication;
 using KashewCheese.Contracts.Users;
 using KashewCheese.API.Common;
-using KashewCheese.Application.DTO;
 
 namespace KashewCheese.API.Controllers
 {
