@@ -10,6 +10,7 @@ namespace KashewCheese.Application.DTO
         public string ProductThumb { get; set; }
         public int CategoryId { get; set; }
         public ICollection<CreateProductVariantRequest> Options {  get; set; }
+        public ICollection<CreateProductSkuRequest> Skus { get; set; }
 
     }
 }

@@ -8,6 +8,7 @@ namespace KashewCheese.Application.Services.Products.Commands.CreateProduct
          string Description,
          string ProductThumb,
          int CategoryId,
-         ICollection<CreateProductVariantRequest> Options
+         ICollection<CreateProductVariantRequest> Options,
+         ICollection<CreateProductSkuRequest> Skus
          ) : IRequest<string>;
 }

@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace KashewCheese.Application.Common.Interfaces.Persistence
 {
-    public interface IProductRepository
+    public interface ISkuRepository
     {
-        Task<Guid> CreateProduct(CreateProductDto createProductDto);
+        Task CreateSku(CreateSkuDto sku);
+        Task CreateBulkSku(List<CreateSkuDto> skuList);
     }
 }

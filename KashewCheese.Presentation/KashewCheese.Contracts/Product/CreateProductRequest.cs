@@ -12,6 +12,7 @@ namespace KashewCheese.Contracts.Product
          string Description,
          string ProductThumb,
          int CategoryId,
-         ICollection<CreateProductVariantRequest> Options
+         ICollection<CreateProductVariantRequest> Options,
+         ICollection<CreateProductSkuRequest> Skus
         );
 }

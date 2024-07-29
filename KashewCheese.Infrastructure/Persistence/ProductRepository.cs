@@ -10,11 +10,11 @@ namespace KashewCheese.Infrastructure.Persistence
     {
         private readonly ApplicationDbContext _context;
 
-        public ProductRepository(ApplicationDbContext context)
+        public ProductRepository(ApplicationDbContext context, ISkuRepository skuRepository)
         {
             _context = context;
         }
-        public async Task CreateProduct(CreateProductDto createProductDto)
+        public async Task<Guid> CreateProduct(CreateProductDto createProductDto)
         {
             Product product = new()
             {
@@ -27,6 +27,9 @@ namespace KashewCheese.Infrastructure.Persistence
             };
             await _context.Products.AddAsync(product);
             await _context.SaveChangesAsync();
+            return product.Id;
         }
+
+        
     }
 }
