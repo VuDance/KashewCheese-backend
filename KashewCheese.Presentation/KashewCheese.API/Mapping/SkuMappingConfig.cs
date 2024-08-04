@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using KashewCheese.Application.DTO;
 using KashewCheese.Contracts.Product;
-using KashewCheese.Domain.Entities;
 using Newtonsoft.Json;
 
 namespace KashewCheese.API.Mapping
