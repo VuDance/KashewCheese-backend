@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace KashewCheese.Contracts.ElasticSearch
 {
-    public record ElasticSearchRequest(string Keyword);
+    public record SearchProductResponse(string Name,string Slug);
 }

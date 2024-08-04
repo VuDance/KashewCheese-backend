@@ -1,11 +1,12 @@
-﻿using KashewCheese.Application.Services.Search.Queries.GetSearchResult;
+﻿using KashewCheese.API.Common;
+using KashewCheese.Application.Services.Search.Queries.GetSearchResult;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KashewCheese.API.Controllers
 {
-    public class SearchController : ControllerBase
+    public class SearchController : ApiControllerBase
     {
         private readonly ISender _mediator;
         public SearchController(ISender mediator)
@@ -14,10 +15,10 @@ namespace KashewCheese.API.Controllers
         }
         [HttpGet]
         [AllowAnonymous]
-        [Route("GetSearch")]
-        public async Task<IActionResult> GetSearchResult()
+        [Route("SearchProduct")]
+        public async Task<IActionResult> GetSearchResult([FromQuery] string keyword)
         {
-            var res = await _mediator.Send(new GetSearchResultQuery());
+            var res = await _mediator.Send(new GetSearchResultQuery(keyword));
             return Ok(res);
         }
     }

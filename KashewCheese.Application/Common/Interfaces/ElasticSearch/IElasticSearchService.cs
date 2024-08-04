@@ -1,4 +1,5 @@
 ﻿using KashewCheese.Contracts.ElasticSearch;
+using Nest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +15,6 @@ namespace KashewCheese.Application.Common.Interfaces.ElasticSearch
         Task<IEnumerable<T>> GetAllDocument();
         Task<string> UpdateDocumentAsync(T document);
         Task<string> DeleteDocumentAsync(int id);
+        Task<IList<SearchProductResponse>> SearchProduct(string keyword);
     }
 }

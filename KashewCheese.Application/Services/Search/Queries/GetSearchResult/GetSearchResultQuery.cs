@@ -1,12 +1,15 @@
 ﻿using KashewCheese.Contracts.ElasticSearch;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Nest;
+
 
 namespace KashewCheese.Application.Services.Search.Queries.GetSearchResult
 {
-    public record GetSearchResultQuery : IRequest<string>;
+    public class GetSearchResultQuery : MediatR.IRequest<IList<SearchProductResponse>>
+    {
+        public string Keyword { get; set; }
+        public GetSearchResultQuery(string keyword) {
+            Keyword = keyword;
+        }
+    }
 }

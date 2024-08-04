@@ -72,9 +72,11 @@ namespace KashewCheese.Infrastructure
         {
             var url = configuration["ElasticsearchSettings:Uri"];
             var defaultIndex = configuration["ElasticsearchSettings:DefaultIndex"];
+            var username = configuration["ElasticsearchSettings:Username"];
+            var password = configuration["ElasticsearchSettings:Password"];
 
             var settings = new ConnectionSettings(new Uri(url))
-                .DefaultIndex(defaultIndex);
+                .DefaultIndex(defaultIndex).BasicAuthentication(username, password).ServerCertificateValidationCallback((o, certificate, chain, errors) => true);
 
             var client = new ElasticClient(settings);
 

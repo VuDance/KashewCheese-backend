@@ -1,11 +1,6 @@
 ﻿using KashewCheese.Application.Common.Interfaces.ElasticSearch;
 using KashewCheese.Contracts.ElasticSearch;
 using Nest;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace KashewCheese.Infrastructure.ElasticSearch
 {
@@ -21,6 +16,28 @@ namespace KashewCheese.Infrastructure.ElasticSearch
         {
             var response = await _elasticClient.IndexDocumentAsync(document);
             return response.IsValid ? "ok" : "ko";
+        }
+
+        public async Task<IList<SearchProductResponse>> SearchProduct(string keyword)
+        {
+            var searchResponse = await _elasticClient.SearchAsync<SearchProductResponse>(s => s
+                .Source(src => src
+                    .Includes(f => f
+                        .Fields(
+                            p => p.Name,
+                            p => p.Slug
+                        )
+                    )
+                )
+                .Query(q => q
+                    .Wildcard(m => m
+                         .Field(f => f.Name)
+                         .Value($"*{keyword}*")
+                    )
+                )
+            );
+
+            return searchResponse.Documents.ToList();
         }
 
         public Task<string> DeleteDocumentAsync(int id)
