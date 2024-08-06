@@ -8,5 +8,5 @@ using System.Threading.Tasks;
 
 namespace KashewCheese.Application.Services.Authentication.Common
 {
-    public record AuthenticationResult(UserDto user, string Token);
+    public record AuthenticationResult(UserDto? user, string? Token,string Message);
 }

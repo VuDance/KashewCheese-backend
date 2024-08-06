@@ -16,6 +16,6 @@ namespace KashewCheese.Application.Common.Interfaces.Persistence
 
         Task<List<User>> GetAll();
 
-
+        Task<bool> VerifyEmailAsync(string email, string code);
     }
 }

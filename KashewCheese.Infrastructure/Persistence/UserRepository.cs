@@ -33,6 +33,8 @@ namespace KashewCheese.Infrastructure.Persistence
             userCreated.LastName = user.LastName;
             userCreated.Email = user.Email;
             userCreated.Password= user.Password;
+            userCreated.IsEmailConfirmed = user.IsEmailConfirmed;
+            userCreated.EmailVerificationCode = user.EmailVerificationCode;
             
             var userData= await _context.Users.AddAsync(userCreated);
             await _context.SaveChangesAsync();
@@ -52,8 +54,19 @@ namespace KashewCheese.Infrastructure.Persistence
             User user = await _context.Users.Include(u => u.UserRoles).ThenInclude(u => u.Role).FirstOrDefaultAsync(u => u.Email == email);
             return user;
         }
+        public async Task<bool> VerifyEmailAsync(string email, string code)
+        {
+            var user = await GetUserByEmail(email);
+            if (user != null && user.EmailVerificationCode == code)
+            {
+                user.IsEmailConfirmed = true;
+                user.EmailVerificationCode = null;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
 
-         
-        
+
     }
 }

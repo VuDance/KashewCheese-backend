@@ -53,7 +53,7 @@ namespace KashewCheese.Application.Services.Authentication.Queries.Login
 
             return new AuthenticationResult(
                 userDto,
-                token);
+                token,"Login successfully");
         }
     }
 }

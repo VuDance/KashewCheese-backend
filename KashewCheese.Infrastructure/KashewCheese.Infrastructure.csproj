@@ -11,6 +11,7 @@
     <PackageReference Include="AWSSDK.S3" Version="3.7.310.6" />
     <PackageReference Include="Elasticsearch.Net" Version="7.17.5" />
     <PackageReference Include="JWT" Version="10.1.1" />
+    <PackageReference Include="MailKit" Version="4.7.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.20" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.20" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.20" />

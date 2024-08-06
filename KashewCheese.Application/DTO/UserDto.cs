@@ -14,5 +14,7 @@ namespace KashewCheese.Application.DTO
         public string Password { get; set; }
         public string Email { get; set; }
         public List<RoleDto>? UserRoles { get; set; }
+        public bool IsEmailConfirmed { get; set; } = false;
+        public string EmailVerificationCode { get; set; }
     }
 }

@@ -1,10 +1,5 @@
 ﻿using KashewCheese.Domain.Common;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace KashewCheese.Domain.Entities
 {
@@ -16,6 +11,7 @@ namespace KashewCheese.Domain.Entities
         public string Password { get; set; }
         public string Email { get; set; }
         public ICollection<UserRole> UserRoles { get; set; }
-
+        public bool IsEmailConfirmed { get; set; } = false;
+        public string? EmailVerificationCode { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using KashewCheese.API.Common;
 using KashewCheese.Application.Services.Authentication.Commands.Register;
+using KashewCheese.Application.Services.Authentication.Commands.VerifyEmail;
 using KashewCheese.Application.Services.Authentication.Queries.Login;
 using KashewCheese.Contracts.Authentication;
 using MediatR;
@@ -41,6 +42,14 @@ namespace KashewCheese.API.Controllers
             var response = _mapper.Map<AuthenticationResponse>(authResult);
 
             return Ok(response);
+        }
+        [Route("VeifyEnail")]
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> VerifyEmail([FromBody] string email, string code)
+        {
+            var rs=await _mediator.Send(new VerifyEmailCommand(email, code));
+            return Ok(rs);
         }
     }
 }

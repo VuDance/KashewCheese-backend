@@ -1,5 +1,6 @@
 ﻿using KashewCheese.Application.Common.Errors;
 using KashewCheese.Application.Common.Interfaces.Authentication;
+using KashewCheese.Application.Common.Interfaces.Email;
 using KashewCheese.Application.Common.Interfaces.Persistence;
 using KashewCheese.Application.DTO;
 using KashewCheese.Application.Services.Authentication.Common;
@@ -19,11 +20,13 @@ namespace KashewCheese.Application.Services.Authentication.Commands.Register
     {
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
         private readonly IUserRepository _userRepository;
+        private readonly IEmailService _emailService;
 
-        public RegisterCommandHandler(IUserRepository userRepository, IJwtTokenGenerator jwtTokenGenerator)
+        public RegisterCommandHandler(IUserRepository userRepository, IJwtTokenGenerator jwtTokenGenerator,IEmailService emailService)
         {
             _userRepository = userRepository;
             _jwtTokenGenerator = jwtTokenGenerator;
+            _emailService = emailService;
         }
         public async Task<AuthenticationResult> Handle(RegisterCommand command, CancellationToken cancellationToken)
         {
@@ -36,16 +39,16 @@ namespace KashewCheese.Application.Services.Authentication.Commands.Register
             {
                 Email = command.Email,
                 Password = BCrypt.Net.BCrypt.HashPassword(command.Password),
-                UserRoles = command.Roles
+                UserRoles = command.Roles,
+                IsEmailConfirmed=false,
+                EmailVerificationCode= _emailService.GenerateVerificationCode(),
             };
             
             await _userRepository.Add(user);
+            await _emailService.SendEmailAsync(user.Email, "Email Verification", $"Your verification code is {user.EmailVerificationCode}");
 
-            var token = _jwtTokenGenerator.GenerateToken(user);
 
-            return new AuthenticationResult(
-                user,
-                token);
+            return new AuthenticationResult(null,null,"Create users successfully, please verify email!");
         }
     }
 }

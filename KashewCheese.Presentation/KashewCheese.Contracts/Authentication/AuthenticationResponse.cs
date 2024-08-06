@@ -7,5 +7,5 @@ using System.Threading.Tasks;
 namespace KashewCheese.Contracts.Authentication
 {
     public record AuthenticationResponse(
-        string Token);
+        string Token,string Message);
 }
