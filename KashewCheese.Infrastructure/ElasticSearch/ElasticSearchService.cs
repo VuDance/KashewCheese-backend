@@ -12,9 +12,9 @@ namespace KashewCheese.Infrastructure.ElasticSearch
         {
             _elasticClient = elasticClient;
         }
-        public async Task<string> CreateDocumentAsync(T document)
+        public async Task<string> CreateDocumentAsync(T document,string id)
         {
-            var response = await _elasticClient.IndexDocumentAsync(document);
+            var response = await _elasticClient.IndexAsync(document,i=>i.Id(id));
             return response.IsValid ? "ok" : "ko";
         }
 
@@ -45,9 +45,22 @@ namespace KashewCheese.Infrastructure.ElasticSearch
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<T>> GetAllDocument()
+        public async Task<IEnumerable<T>> GetAllDocument(int pageIndex,int pageSize)
         {
-            throw new NotImplementedException();
+            var from = (pageIndex - 1) * pageSize;
+            var searchResponse = await _elasticClient.SearchAsync<T>(s => s
+                .Query(q => q.MatchAll())
+                .From(from)
+                .Size(pageSize)
+            );
+
+            if (!searchResponse.IsValid)
+            {
+                // Xử lý lỗi nếu có
+                throw new Exception($"Lỗi khi lấy tài liệu: {searchResponse.ServerError.Error.Reason}");
+            }
+
+            return searchResponse.Documents;
         }
 
         public Task<T> GetDocumentAsync(int id)

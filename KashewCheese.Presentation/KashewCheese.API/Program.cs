@@ -1,5 +1,6 @@
 
 using KashewCheese.API;
+using KashewCheese.API.Extensions;
 using KashewCheese.API.Middlewares;
 using KashewCheese.Application;
 using KashewCheese.Infrastructure;
@@ -63,9 +64,6 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<PermissionMiddleware>();
-app.UseWhen(context => context.Request.Path.StartsWithSegments("/api/User/GetUser"), appBuilder =>
-{
-    appBuilder.UseMiddleware<UserMiddleware>();
-});
+app.UseRouter(app.UseRouterMiddleware());
 app.MapControllers();
 app.Run();

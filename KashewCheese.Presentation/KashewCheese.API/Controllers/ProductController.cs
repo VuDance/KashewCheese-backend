@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using KashewCheese.Application.Services.Products.Commands.CreateProduct;
+using KashewCheese.Application.Services.Products.Queries.GetProducts;
+using KashewCheese.Application.Services.Users.Queries.GetUserList;
 using KashewCheese.Contracts.Product;
+using KashewCheese.Contracts.Users;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +29,15 @@ namespace KashewCheese.API.Controllers
             var result= await _mediator.Send(command);
 
             return Ok(new CreateProductResponse(result));
+        }
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("GetProducts")]
+        public async Task<IActionResult> GetProducts([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        {
+            var res = await _mediator.Send(new GetProductsQuery(page, pageSize));
+            return Ok(res);
+
         }
     }
 }

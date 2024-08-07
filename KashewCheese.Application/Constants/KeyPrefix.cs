@@ -11,5 +11,6 @@ namespace KashewCheese.Application.Constants
         public const string User = "user";
         public const string Role = "role";
         public const string Permission = "permission";
+        public const string Product = "product";
     }
 }

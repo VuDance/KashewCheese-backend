@@ -1,4 +1,5 @@
 ﻿using KashewCheese.Application.DTO;
+using KashewCheese.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
