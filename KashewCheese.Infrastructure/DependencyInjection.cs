@@ -56,11 +56,6 @@ namespace KashewCheese.Infrastructure
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<ISkuRepository, SkuRepository>();
             services.AddScoped<IEmailService, EmailService>();
-            /*services.AddScoped<IAdminstratorRepository, AdminstratorRepository>();
-            services.AddScoped<IAccountsRepository, AccountsRepository>();
-            services.AddScoped<ICustomerRepository, CustomersRepository>();
-            services.AddScoped<ITransactionsRepository, TransactionsRepository>();
-            services.AddScoped<IDispositionRepository, DispositionRepository>();*/
 
             return services;
         }
@@ -78,8 +73,10 @@ namespace KashewCheese.Infrastructure
             var username = configuration["ElasticsearchSettings:Username"];
             var password = configuration["ElasticsearchSettings:Password"];
 
+           /* var settings = new ConnectionSettings(new Uri(url))
+                .DefaultIndex(defaultIndex).BasicAuthentication(username, password).ServerCertificateValidationCallback((o, certificate, chain, errors) => true);*/
             var settings = new ConnectionSettings(new Uri(url))
-                .DefaultIndex(defaultIndex).BasicAuthentication(username, password).ServerCertificateValidationCallback((o, certificate, chain, errors) => true);
+                .DefaultIndex(defaultIndex).ServerCertificateValidationCallback((o, certificate, chain, errors) => true);
 
             var client = new ElasticClient(settings);
 

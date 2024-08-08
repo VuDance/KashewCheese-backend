@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Application.Interfaces;
+using AutoMapper;
 using KashewCheese.Application.Common.Interfaces.ElasticSearch;
 using KashewCheese.Application.Common.Interfaces.Persistence;
 using KashewCheese.Application.DTO;
@@ -12,6 +13,7 @@ namespace KashewCheese.Application.Services.Products.Commands.CreateProduct
         private readonly ISkuRepository _skuRepository;
         private readonly IMapper _mapper;
         private readonly IElasticSearchService<CreateProductDto> _elasticSearchService;
+
 
         public CreateProductCommandHandler(IProductRepository productRepository, IMapper mapper,ISkuRepository skuRepository,IElasticSearchService<CreateProductDto> elasticSearchService)
         {
@@ -31,6 +33,7 @@ namespace KashewCheese.Application.Services.Products.Commands.CreateProduct
             }
             await _skuRepository.CreateBulkSku(skuDto);
             await _elasticSearchService.CreateDocumentAsync(createProductDto, productId.ToString());
+
             return productId.ToString();
         }
     }

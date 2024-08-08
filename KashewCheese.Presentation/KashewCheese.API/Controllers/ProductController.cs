@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using KashewCheese.API.Common;
 using KashewCheese.Application.Services.Products.Commands.CreateProduct;
+using KashewCheese.Application.Services.Products.Queries.GetDetailProduct;
 using KashewCheese.Application.Services.Products.Queries.GetProducts;
 using KashewCheese.Application.Services.Users.Queries.GetUserList;
 using KashewCheese.Contracts.Product;
@@ -10,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace KashewCheese.API.Controllers
 {
-    public class ProductController : ControllerBase
+    public class ProductController : ApiControllerBase
     {
         private readonly ISender _mediator;
         private readonly IMapper _mapper;
@@ -38,6 +40,14 @@ namespace KashewCheese.API.Controllers
             var res = await _mediator.Send(new GetProductsQuery(page, pageSize));
             return Ok(res);
 
+        }
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("GetDetailProduct/{id}")]
+        public async Task<IActionResult> GetDetailProduct(Guid id)
+        {
+            var res = await _mediator.Send(new GetDetailProductQuery(id));
+            return Ok(res);
         }
     }
 }

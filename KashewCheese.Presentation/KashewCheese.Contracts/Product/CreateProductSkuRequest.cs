@@ -8,7 +8,7 @@ namespace KashewCheese.Contracts.Product
 {
     public record CreateProductSkuRequest(
         string Name,
-        ICollection<string> SkuIdx,
+        ICollection<int> SkuIdx,
         string Slug,
         string ProductThumb,
         float ProductPrice,

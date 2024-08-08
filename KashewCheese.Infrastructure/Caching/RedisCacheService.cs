@@ -29,10 +29,12 @@ namespace Persistence.Redis
             {
                 return;
             }
+            var settings = new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
 
-            var json = JsonConvert.SerializeObject(value,new JsonSerializerSettings(){
-                ContractResolver=new CamelCasePropertyNamesContractResolver()
-            });
+            var json = JsonConvert.SerializeObject(value,settings);
             await _distributedCache.SetStringAsync(key, json,new DistributedCacheEntryOptions()
             {
                 AbsoluteExpirationRelativeToNow = expiration,
@@ -72,6 +74,7 @@ namespace Persistence.Redis
         }
         public string ConvertData(string data)
         {
+            data = data.Replace("\\\\\\\"", "\"").Trim('"');
             return data.Replace("\\\"", "\"").Trim('"');
         }
     }

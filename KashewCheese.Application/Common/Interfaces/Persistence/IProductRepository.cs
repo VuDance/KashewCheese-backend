@@ -1,15 +1,12 @@
 ﻿using KashewCheese.Application.DTO;
-using KashewCheese.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using KashewCheese.Contracts.Product;
+
 
 namespace KashewCheese.Application.Common.Interfaces.Persistence
 {
     public interface IProductRepository
     {
         Task<Guid> CreateProduct(CreateProductDto createProductDto);
+        Task<GetProductDetailResponse> GetDetailProduct(Guid productId);
     }
 }

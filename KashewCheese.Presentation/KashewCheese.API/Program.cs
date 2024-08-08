@@ -5,7 +5,9 @@ using KashewCheese.API.Middlewares;
 using KashewCheese.Application;
 using KashewCheese.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.OpenApi.Models;
+using System.Text.Json.Serialization;
 using WebAPI;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +19,11 @@ builder.Services
 
 
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    options.JsonSerializerOptions.WriteIndented = true;
+});
 builder.Services.AddSwaggerGen(setup =>
 {
     // Include 'SecurityScheme' to use JWT Authentication

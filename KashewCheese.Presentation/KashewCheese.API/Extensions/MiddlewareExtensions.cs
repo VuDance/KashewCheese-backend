@@ -8,11 +8,14 @@ namespace KashewCheese.API.Extensions
         {
             var builder = new RouteBuilder(applicationBuilder);
 
+            applicationBuilder.UseWhen(context => context.Request.Path.StartsWithSegments("/api/Product/GetDetailProduct"), appBuilder =>
+            {
+                appBuilder.UseMiddleware<GetDetailProductMiddleware>();
+            });
             applicationBuilder.UseWhen(context => context.Request.Path.StartsWithSegments("/api/User/GetUser"), appBuilder =>
             {
                 appBuilder.UseMiddleware<UserMiddleware>();
             });
-
 
 
             return builder.Build();
